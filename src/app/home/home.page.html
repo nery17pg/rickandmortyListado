@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>
-      Blank
+      Rick and Morty Characters
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,12 +9,64 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">Characters</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Cargando personajes...</p>
+  </div>
+
+  <div *ngIf="errorMessage && !isLoading" class="error-container">
+    <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+    <p>{{ errorMessage }}</p>
+    <ion-button (click)="retry()" color="primary">
+      <ion-icon slot="start" name="refresh"></ion-icon>
+      Reintentar
+    </ion-button>
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage" class="characters-container">
+    <ion-card *ngFor="let character of characters" class="character-card">
+      <img [src]="character.image" [alt]="character.name" />
+
+      <ion-card-header>
+        <ion-card-title>{{ character.name }}</ion-card-title>
+        <ion-card-subtitle>
+          <ion-badge [color]="getStatusColor(character.status)">
+            {{ character.status }}
+          </ion-badge>
+        </ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-list lines="none">
+          <ion-item>
+            <ion-icon name="body-outline" slot="start"></ion-icon>
+            <ion-label>
+              <p>Especie</p>
+              <h3>{{ character.species }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon name="male-female-outline" slot="start"></ion-icon>
+            <ion-label>
+              <p>Género</p>
+              <h3>{{ character.gender }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon name="planet-outline" slot="start"></ion-icon>
+            <ion-label>
+              <p>Origen</p>
+              <h3>{{ character.origin.name }}</h3>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
   </div>
 </ion-content>
